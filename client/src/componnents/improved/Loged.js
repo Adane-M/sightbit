@@ -4,6 +4,7 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 
 const Loged = (props) => {
     if (!props.islogin) {
+        console.log(props.islogin);
         return (
             <ListItemAvatar>
                 <Avatar alt={props.name} src={props.name} sx={{ bgcolor: 'red' }} />

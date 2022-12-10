@@ -45,6 +45,14 @@ export const signup = async (req, res) => {
         if (!match) {
             return res.status(400).json({ msg: 'Wrong phone number' });
         }
+        // cahnge is login to true
+        const result = await users.updateOne(
+            { "_id": ObjectID(user._id) },
+            {
+                $set: { 'islogin': true },
+                $currentDate: { lastModified: true }
+            }
+        )
         //creat access-token when login match successeded!
         const accessToken = jwt.sign({ userId: user._id, userName: user.name }, process.env.ACCESS_TOKEN_SECRET, {
             expiresIn: 86400
@@ -81,7 +89,7 @@ export async function logout(userId) {
     const result = await users.updateOne(
         { "_id": ObjectID(userId) },
         {
-            $set: { 'islogin': 'false' },
+            $set: { 'islogin': false },
             $currentDate: { lastModified: true }
         }
     )

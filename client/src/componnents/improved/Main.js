@@ -21,7 +21,6 @@ import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
-
 const StyledFab = styled(Fab)({
     position: 'absolute',
     zIndex: 1,
@@ -31,7 +30,10 @@ const StyledFab = styled(Fab)({
     height: 100
 });
 
+
 export default function Main() {
+    // fetch('https://api.giphy.com/v1/gifs/search?api_key=k5oZLRzjZAXakdbQXAo5CqyXCcjX1rFL&q=deadpool&limit=1&offset=0&rating=g&lang=en')
+
     const [users, setUsers] = useState([])
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [count, setCount] = useState('')
@@ -49,7 +51,6 @@ export default function Main() {
             try {
                 const decode = await jwt_decode(accessToken);
                 setUserId(decode.userId);
-                // console.log('decode===>', decode);
                 const expire = decode.exp
                 setExp(new Date(expire * 1000).toString())
                 if (exp * 1000 < new Date().getTime()) {
@@ -75,13 +76,12 @@ export default function Main() {
             }
         });
         setIsLoading(false);
-        const arrangedUsers = res.data.sort(u => u.islogin ? -1 : 1).filter(k => k._id !== userId)
-        setUsers(arrangedUsers);
+        setUsers(res.data.filter(elem => elem._id !== userId).sort(elem => !elem.islogin ? 1 : -1))
         const found = await res.data.filter(element =>
             element.islogin === false
         )
         setCount(found.length)
-    }, [accessToken])
+    }, [accessToken, userId])
 
     useEffect(() => {
         getUsersmsgs()
@@ -91,7 +91,6 @@ export default function Main() {
             })
 
     }, [getUsersmsgs])
-
 
     const handleToggle = (value) => {
         const colnedSelectedUsers = [...selectedUsers];
@@ -137,8 +136,8 @@ export default function Main() {
     const senToAll = async () => {
 
         const allconnectedId = []
-        users.forEach(elem =>{
-            if(elem.islogin === true){
+        users.forEach(elem => {
+            if (elem.islogin === true) {
                 allconnectedId.push(elem._id)
             }
         })
@@ -163,23 +162,51 @@ export default function Main() {
 
     }
 
+    const lastmsg = (msgs) => {
+        let currDate = new Date().toLocaleString();
+        let msg = '';
+        if (!msgs) {
+            return 'start msg'
+        }
+        msgs.forEach(element => {
+            if (element.from === userId && element.date < currDate) {
+                element.date = currDate
+                if (currDate > element.date) {
+                    msg = element.msg
+                    console.log(msg);
+                } else {
+                    currDate = element.date;
+                }
+            }
+
+        });
+        console.log('msg', msg);
+        return msg;
+
+    }
+
+
     return (
         <React.Fragment>
-            <Logout userId={userId}/>
+            <Logout userId={userId} />
+            {/* <Button variant="contained" onClick={clickk}>contained</Button> */}
+
             <CssBaseline />
-            <Paper square sx={{ pb: '50px', width: '60vw' }}>
+            <Paper square sx={{ pb: '50px', width: '80vw' }}>
                 <ListSubheader sx={{ bgcolor: 'background.paper' }}>
                     {count}/ {users.length} is Disconnected
                 </ListSubheader>
                 <List sx={{ mb: 2 }} >
                     {isLoading ? <Loading /> :
-                        users.map((user) => {
+                        (!users) ? <h1>NO USERS YET</h1> : users.map((user) => {
                             return (
                                 <div key={user._id} style={{ display: 'flex', flexDirection: 'row' }}>
                                     <ListItem button onClick={() => openMessages(user._id)}>
                                         <Loged islogin={user.islogin} name={user.name} />
-                                        {user.name}
-                                        <ListItemText primary={user.sentmsgs[0].msg}  secondary={user.sentmsgs[0].date} />
+                                        <Fab variant="extended" size='small' >
+                                            <p>{user.name}</p> <br></br>
+                                        </Fab>
+                                        <ListItemText primary={(!user.sentmsgs[0]) ? "no messages yet" : lastmsg(user.sentmsgs)} secondary={(!user.sentmsgs[0]) ? " " : user.sentmsgs[0].date} />
                                     </ListItem>
                                     <div style={{ margin: '5px' }}>
                                         <Checkbox onChange={() => handleToggle(user._id)} disabled={!user.islogin} />
@@ -212,7 +239,7 @@ export default function Main() {
                             onChange={(e) => { setInpuval(e.target.value) }}
                         />
                     </Box>
-                    <Button sx={{backgroundColor:'lightblue' , height: "10vh" , color:'black'}}variant="outlined" onClick={senToAll}>Send to all</Button>
+                    <Button sx={{ backgroundColor: 'lightblue', height: "10vh", color: 'black' }} variant="outlined" onClick={senToAll}>Send to all</Button>
                 </Toolbar>
             </AppBar>
         </React.Fragment>

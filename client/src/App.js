@@ -15,7 +15,7 @@ function App() {
   return (
     <BrowserRouter>
       <AppContext.Provider value={{ accessToken, setAccessToken }}>
-        <div className="App-header">
+        {/* <div className="App-header"> */}
 
           <Routes>
             <Route path='/login' element={<SignIn />} />
@@ -23,7 +23,7 @@ function App() {
             <Route path='/:userId/:selectedUserId' element={<Auth><Chat /></Auth>} />
           </Routes>
 
-        </div>
+        {/* </div> */}
       </AppContext.Provider>
     </BrowserRouter>
   );

@@ -76,12 +76,12 @@ export default function Main() {
             }
         });
         setIsLoading(false);
-        setUsers(res.data.filter(elem => elem._id !== userId).sort(elem => !elem.islogin ? 1 : -1))
+         setUsers(res.data.filter(elem => elem._id !== userId).sort(elem => !elem.islogin ? 1 : -1));
         const found = await res.data.filter(element =>
             element.islogin === false
         )
         setCount(found.length)
-    }, [accessToken, userId])
+    }, [setUsers,accessToken])
 
     useEffect(() => {
         getUsersmsgs()
@@ -115,7 +115,7 @@ export default function Main() {
         try {
             const res = await axios.put('/updatemsg/send/multiple', {
                 _ids: selectedUsers,
-                from: users[0]._id,
+                from: userId,
                 msg: inpuval
             }, {
                 withCredentials: true,
@@ -163,36 +163,23 @@ export default function Main() {
     }
 
     const lastmsg = (msgs) => {
-        let currDate = new Date().toLocaleString();
-        let msg = '';
-        if (!msgs) {
-            return 'start msg'
-        }
+        let msg = 'no msgs yet';
         msgs.forEach(element => {
-            if (element.from === userId && element.date < currDate) {
-                element.date = currDate
-                if (currDate > element.date) {
-                    msg = element.msg
-                    console.log(msg);
-                } else {
-                    currDate = element.date;
-                }
+            if (element.from === userId) {
+                msg = element.msg;
             }
-
         });
-        console.log('msg', msg);
         return msg;
-
     }
 
 
     return (
-        <React.Fragment>
+        <div className='App-header'>
             <Logout userId={userId} />
             {/* <Button variant="contained" onClick={clickk}>contained</Button> */}
 
             <CssBaseline />
-            <Paper square sx={{ pb: '50px', width: '80vw' }}>
+            <Paper sx={{width:'90vw' , height:'90vh', pb: '90px'}}>
                 <ListSubheader sx={{ bgcolor: 'background.paper' }}>
                     {count}/ {users.length} is Disconnected
                 </ListSubheader>
@@ -200,13 +187,10 @@ export default function Main() {
                     {isLoading ? <Loading /> :
                         (!users) ? <h1>NO USERS YET</h1> : users.map((user) => {
                             return (
-                                <div key={user._id} style={{ display: 'flex', flexDirection: 'row' }}>
-                                    <ListItem button onClick={() => openMessages(user._id)}>
+                                <div key={user._id} style={{display: 'flex', flexDirection: 'row' }}>
+                                    <ListItem button sx={{fs:'1.5rem'}} onClick={() => openMessages(user._id)}>
                                         <Loged islogin={user.islogin} name={user.name} />
-                                        <Fab variant="extended" size='small' >
-                                            <p>{user.name}</p> <br></br>
-                                        </Fab>
-                                        <ListItemText primary={(!user.sentmsgs[0]) ? "no messages yet" : lastmsg(user.sentmsgs)} secondary={(!user.sentmsgs[0]) ? " " : user.sentmsgs[0].date} />
+                                        <ListItemText primary={lastmsg(user.sentmsgs)} secondary={(!user.sentmsgs[0]) ? " " : user.sentmsgs[0].date} />
                                     </ListItem>
                                     <div style={{ margin: '5px' }}>
                                         <Checkbox onChange={() => handleToggle(user._id)} disabled={!user.islogin} />
@@ -242,6 +226,6 @@ export default function Main() {
                     <Button sx={{ backgroundColor: 'lightblue', height: "10vh", color: 'black' }} variant="outlined" onClick={senToAll}>Send to all</Button>
                 </Toolbar>
             </AppBar>
-        </React.Fragment>
+        </div>
     );
 }

@@ -25,7 +25,7 @@ const Logout = (props) => {
 
     }
     return (
-        <Fab variant="extended" size='small' color="error" onClick={() => signout(props.userId)}>
+        <Fab variant="extended" size='medium' color="error" style={{alignSelf:'flex-end' ,letterSpacing:'2px'}} onClick={() => signout(props.userId)}>
                 Logout
         </Fab>
 

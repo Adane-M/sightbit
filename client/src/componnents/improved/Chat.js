@@ -91,8 +91,14 @@ const Chat = () => {
     }
     return (
         <>
-        <Logout userId={params.userId}/>
-            <Paper square sx={{ pb: '50px', width: '96vw' }}>
+        <Logout userId={params.userId} />
+        <Fab variant="extended" style={{ alignSelf:'flex-start'}} onClick={() => navigate('/')}>
+            homepage
+        </Fab>
+            <Paper sx={{ pb: '50px', width: '96vw' ,  backgroundColor: '#e5e5f7',
+  background: 'radial-gradient(circle, transparent 20%, #e5e5f7 20%, #e5e5f7 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, #e5e5f7 20%, #e5e5f7 80%, transparent 80%, transparent) 25px 25px, linear-gradient(#101011 2px, transparent 2px) 0 -1px, linear-gradient(90deg, #4e4e4e 2px, #e5e5f7 2px) -1px 0',
+  backgroundSize: '50px 50px, 50px 50px, 25px 25px, 25px 25px'
+}}>
                 <ListSubheader sx={{ bgcolor: 'background.paper' }}>
                 </ListSubheader>
                 <List sx={{ mb: 2 }} >
@@ -101,7 +107,7 @@ const Chat = () => {
 
                             return (
 
-                                <ListItem button key={i} style={{ textAlign: 'center', backgroundColor: "green", color: "white", borderRadius: "20px", left: "40vw", width: '50vw', marginTop: "5px" }}>
+                                <ListItem button key={i} style={{ textAlign: 'center', backgroundColor: "white" , borderBottom:'8px solid green', borderRadius: "20px", left: "40vw", width: '50vw', marginTop: "5px" }}>
                                     <ListItemText primary={elem.msg} secondary={elem.date} />
                                 </ListItem>
                             )
@@ -109,7 +115,7 @@ const Chat = () => {
 
                             return (
 
-                                <ListItem button key={i} style={{ textAlign: 'center', backgroundColor: "lightgrey", color: "white", borderRadius: "20px", left: "10vw", width: '50vw', marginTop: "5px" }}>
+                                <ListItem button key={i} style={{ textAlign: 'center',borderBottom:'6px solid purple', background: "white", borderRadius: "20px", left: "10vw", width: '50vw', marginTop: "5px" }}>
                                     <ListItemText primary={elem.msg} secondary={elem.date} />
                                 </ListItem>
                             )
@@ -126,14 +132,14 @@ const Chat = () => {
                     <Box
                         component="form"
                         sx={{
-                            '& .MuiTextField-root': { m: 1, width: '80vw', height: "20vh", backgroundColor: 'white' },
+                            '& .MuiTextField-root': { m: 1, width: '80vw', backgroundColor: 'white' }
                         }}
                         noValidate
                         autoComplete="off"
                     >
                         <TextField
                             id="outlined-textarea"
-                            label="start messaeging"
+                            // label="start messaeging"
                             placeholder="type your thoughts"
                             value={inpuval}
                             multiline

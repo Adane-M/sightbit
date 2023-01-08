@@ -20,8 +20,8 @@ function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
+      <Link color="inherit" href="/login">
+        Chat_App
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -77,9 +77,9 @@ export default function SignIn() {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-            <Button />
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' ,width: 100, height: 100}}>
+            {/* <LockOutlinedIcon /> */}
+            {/* <Button /> */}
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign in
@@ -92,7 +92,7 @@ export default function SignIn() {
               id="email"
               label="Name"
               name="Name"
-              // autoComplete="email"
+              autoComplete="email"
               autoFocus
             />
             <TextField
@@ -110,7 +110,7 @@ export default function SignIn() {
               label="Remember me"
             />
             <Typography component="h1" variant="h6" color="#b3e5fc">
-            {msg}
+              {msg}
             </Typography>
             <Button
               type="submit"
